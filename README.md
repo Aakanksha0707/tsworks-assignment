@@ -66,49 +66,49 @@ assignment/
 ### Install python on your machine
 
 ### Clone the repository
-<pre> ```bash 
+<pre>
 git clone https://github.com/Aakanksha0707/tsworks-assignment.git
 cd asignment
-``` </pre>
+</pre>
 
 
 ### Create and activate a virtual environment
-<pre> ```bash 
+<pre> 
 python3 -m venv .venv
 source .venv/bin/activate
-``` </pre>
+</pre>
 
 ### Install dependencies
-<pre> ```bash 
+<pre>  
 pip install -r requirements.txt
-``` </pre>
+</pre>
 
 ### Set up the .env file
 In the project root, make sure to change the values in .env file 
 Change the OMDB API key to your API Key
 
 ### Run the pipeline
-<pre> ```bash 
+<pre>  
 python -m src.run_etl
-``` </pre>
+</pre>
 
 
 ### Run individual steps sequentially in the pipeline if needed (Optional)
 
 Extract : 
-<pre> ```bash 
+<pre> 
 python -m src.pipelines.extract
-``` </pre>
+</pre>
 
 Transform : 
-<pre> ```bash 
+<pre>
 ython -m src.pipelines.transform
-``` </pre>
+</pre>
 
 Load : 
-<pre> ```bash 
+<pre>
 python -m src.pipelines.load
-``` </pre>
+</pre>
 
 ---
 
