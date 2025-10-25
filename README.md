@@ -30,7 +30,8 @@ The ETL process performs the following:
 ## **Project Structure**
 
 
-<pre> ``` assignment/
+<pre> ``` 
+assignment/
 ├── data/
 │ ├── raw/ 
 │ │ ├── ml-latest-small/ # Original MovieLens data and the omdb enriched data
