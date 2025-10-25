@@ -3,11 +3,20 @@ from pathlib import Path
 import re
 import pandas as pd
 
+# This file is for cleaning the data and transforming the columns into structured data 
+# bothe from movie lens dataset and the enriched data received from OMDB API
+
+
+# Infer the year from the movie title
 def _infer_year_from_title(title: str) -> int | None:
+    # if the movie name is not a string data type return none
     if not isinstance(title, str):
         return None
+    
+    # A RegEx searching for opening and close brackets in the movie name with 4 digits in between which is the year
     m = re.search(r"\((\d{4})\)$", title.strip())
     if m:
+        # if the year is found check it is within 1870 and 2100 else return None
         try:
             y = int(m.group(1))
             if 1870 <= y <= 2100:
@@ -16,28 +25,41 @@ def _infer_year_from_title(title: str) -> int | None:
             return None
     return None
 
+# Parse the box office value
 def _parse_box_office(value):
+    # if the box office value is not a string or is NA, return None
     if not isinstance(value, str) or value == "N/A":
         return None
+    
+    # Conver the box office value to an a digit and then parse it as an integer
     digits = re.sub(r"[^0-9]", "", value)
     return int(digits) if digits else None
 
+# Parse the runtime value
 def _parse_runtime(value):
+    # if the runtime value is not a string instance or NA return None
     if not isinstance(value, str) or value == "N/A":
         return None
+    # Search for digits in the runtime and parse it into an integer or else return None
     match = re.search(r"(\d+)", value)
     return int(match.group(1)) if match else None
 
+# Parse the released value
 def _parse_released(value):
+    # if the released value is not a string or NA return NA
     if not isinstance(value, str) or value == "N/A":
         return None
+    # Try to convert the released value to a date value
     try:
         return pd.to_datetime(value).date().isoformat()
     except Exception:
         return None
 
 
+# Actual transform function which will transform the data 
 def transform(raw_dir: Path, out_dir: Path) -> None:
+
+    # set the output dir as data/processed
     out_dir.mkdir(parents=True, exist_ok=True)
 
     # ---- MovieLens base CSVs ----
