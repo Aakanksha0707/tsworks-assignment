@@ -65,6 +65,7 @@ def transform(raw_dir: Path, out_dir: Path) -> None:
     # ---- MovieLens base CSVs ----
     movies_path = raw_dir / "ml-latest-small" / "movies.csv"
     ratings_path = raw_dir / "ml-latest-small" / "ratings.csv"
+    print(movies_path)
     if not movies_path.exists() or not ratings_path.exists():
         raise FileNotFoundError("Expected movies.csv and ratings.csv under data/raw/ml-latest-small/")
 
@@ -152,6 +153,7 @@ def transform(raw_dir: Path, out_dir: Path) -> None:
 
 def run():
     root = Path(__file__).resolve().parents[2]
+    print(root)
     raw_dir = root / "data" / "raw"
     out_dir = root / "data" / "processed"
     transform(raw_dir, out_dir)

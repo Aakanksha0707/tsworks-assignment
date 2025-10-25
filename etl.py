@@ -1,10 +1,8 @@
 import argparse
 from pathlib import Path
-from .db import apply_schema
-from .config import get_database_url
-from .pipelines.extract import run as extract_raw
-from .pipelines.transform import transform as transform_raw
-from .pipelines.load import load as load_processed
+from src.pipelines.extract import run as extract_raw
+from src.pipelines.transform import transform as transform_raw
+from src.pipelines.load import load as load_processed
 
 def step_extract():
     """Extract raw data from MovieLens + OMDb"""
@@ -15,7 +13,7 @@ def step_extract():
 def step_transform():
     """Transform raw CSVs into clean processed data"""
     print(" Starting transform step...")
-    root = Path(__file__).resolve().parents[1]
+    root = Path(__file__).resolve().parents[0]
     raw_dir = root / "data" / "raw"
     out_dir = root / "data" / "processed"
     transform_raw(raw_dir, out_dir)
@@ -23,7 +21,7 @@ def step_transform():
 
 def step_load():
     """Apply schema (idempotent) and load processed data into the database"""
-    root = Path(__file__).resolve().parents[1]
+    root = Path(__file__).resolve().parents[0]
     processed = root / "data" / "processed"
     load_processed(processed)
     print("Load step completed.\n")

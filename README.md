@@ -88,22 +88,22 @@ In the project root, make sure to change the values in .env file
 Change the OMDB API key to your API Key
 
 ### Run the pipeline
-<pre>python -m src.run_etl
+<pre>python3 etl.py
 </pre>
 
 
 ### Run individual steps sequentially in the pipeline if needed (Optional)
 
 Extract : 
-<pre>python -m src.pipelines.extract
+<pre>python3 -m src.pipelines.extract
 </pre>
 
 Transform : 
-<pre>python -m src.pipelines.transform
+<pre>python3 -m src.pipelines.transform
 </pre>
 
 Load : 
-<pre>python -m src.pipelines.load
+<pre>python3 -m src.pipelines.load
 </pre>
 
 ---
@@ -120,6 +120,50 @@ Load :
 | `omdb_details` | Metadata from OMDb API (director, box office, runtime, etc.) |
 
 Indexes are created on ratings(movie_id), ratings(user_id), and movie_genres(genre).
+
+
+## Design Choices & Assumptions
+
+### Design Choices
+- **Three-step ETL (Extract → Transform → Load):**  
+  Each stage is modular and single-responsibility. Extraction handles data acquisition, transformation handles all cleaning and normalization, and loading focuses only on schema application and inserts.
+
+- **Two data layers (`raw/` and `processed/`):**  
+  Keeps raw data untouched and stores clean, schema-ready CSVs separately.
+
+- **SQLite for simplicity:**  
+  Lightweight, file-based database ideal for local ETL testing.
+
+- **Idempotent schema:**  
+  DDL is re-applied safely on every load, allowing full refresh runs without setup steps.
+
+- **Environment-driven config:**  
+  `.env` file controls API keys, database URL, and limits.
+
+- **OMDb integrated in Extract step:**  
+  Raw API responses are stored in `omdb_raw.csv` for reproducibility and offline testing.
+
+---
+
+### Assumptions
+- **Dataset:** Uses MovieLens “latest small” dataset with standard structure (`movies.csv`, `ratings.csv`, `links.csv`).
+- **Ratings:** Range 0–5; timestamps parsed.
+- **Movies:** Year parsed from title suffix `(YYYY)` when present; otherwise `NULL`.
+- **Genres:** Split on `|`; entries like `(no genres listed)` are ignored.
+- **OMDb API:** Limited calls (`OMDB_LIMIT`); raw numeric IMDb IDs converted to `tt` format (e.g., `tt0114709`).
+- **OMDb fields:** Basic parsing for `BoxOffice`, `Runtime`, `Released`; text fields stored as-is.
+- **Foreign keys:** Enforced via `PRAGMA foreign_keys=ON` for relational consistency.
+- **Environment:** `.env` must include `OMDB_API_KEY`; defaults set for limit and database URL.
+
+
+## Challenges & How I Overcame Them
+
+- **Path issues:** Fixed import and file path errors using `Path(__file__).resolve().parents[2]` for dynamic project root detection.  
+- **Environment setup:** Standardized config loading via `.env` and `load_env()` to manage API keys and DB URLs.  
+- **API rate limits:** Handled OMDb free-tier constraints using retry logic, backoff, and a configurable `OMDB_LIMIT`.  
+- **Data inconsistencies:** Normalized varied OMDb fields (`BoxOffice`, `Runtime`, `Released`) with type-safe parsing.  
+- **Idempotent runs:** Made schema creation and loads repeatable by applying DDL safely and using full-refresh inserts.  
+- **Integrity checks:** Ensured data consistency by enabling `PRAGMA foreign_keys=ON` during all database operations.
 
 
 ##  **Author**

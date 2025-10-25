@@ -1,7 +1,6 @@
 from __future__ import annotations
 from pathlib import Path
 import pandas as pd
-from sqlalchemy import text
 from src.db import get_engine, apply_schema
 from src.config import get_database_url
 
@@ -55,7 +54,7 @@ def load(processed_dir: Path):
     db_url = get_database_url()
     print(f"Using DATABASE_URL={db_url}")
 
-    schema_path = Path(__file__).resolve().parent.parent.parent / "sql" / "schema.sql"
+    schema_path = Path(__file__).resolve().parent.parent.parent / "schema.sql"
     apply_schema(schema_path)
 
     movies, genres, movie_genres, users, ratings, omdb = _read_processed(processed_dir)
