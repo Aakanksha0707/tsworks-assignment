@@ -1,4 +1,4 @@
-# 🎬 Data Engineering ETL Pipeline — MovieLens + OMDb
+# Data Engineering ETL Pipeline — MovieLens + OMDb
 
 This project implements a **data engineering pipeline** that extracts movie and rating data from the [MovieLens dataset](https://grouplens.org/datasets/movielens/) and enriches it with metadata from the [OMDb API](https://www.omdbapi.com/).  
 The pipeline follows a classic **ETL** (Extract → Transform → Load) architecture using Python and SQLite.
