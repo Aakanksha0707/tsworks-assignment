@@ -70,7 +70,7 @@ https://www.python.org/downloads/
 
 ### Clone the repository
 <pre>git clone https://github.com/Aakanksha0707/tsworks-assignment.git
-cd asignment
+cd tsworks-assignment
 </pre>
 
 
