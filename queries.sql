@@ -1,26 +1,22 @@
---- Movie(s) with the highest average rating (tie-safe)
+--- Movie(s) with the highest average rating 
 
-WITH movie_avgs AS (
-  SELECT
-    r.movie_id,
-    AVG(r.rating) AS avg_rating,
-    COUNT(*) AS n_ratings
-  FROM ratings r
-  GROUP BY r.movie_id
-),
-ranked AS (
-  SELECT
-    m.title,
-    ma.movie_id,
-    ma.avg_rating,
-    ma.n_ratings,
-    RANK() OVER (ORDER BY ma.avg_rating DESC) AS rnk
-  FROM movie_avgs ma
-  JOIN movies m ON m.movie_id = ma.movie_id
-)
-SELECT title, movie_id, avg_rating, n_ratings
-FROM ranked
-WHERE rnk = 1;
+SELECT
+  r.movie_id,
+  AVG(r.rating) AS avg_rating,
+  COUNT(*) AS n_ratings
+FROM ratings r
+WHERE r.rating IS NOT NULL
+GROUP BY r.movie_id
+HAVING AVG(r.rating) = (
+  SELECT MAX(avg_rating)
+  FROM (
+    SELECT AVG(rating) AS avg_rating
+    FROM ratings
+    WHERE rating IS NOT NULL
+    GROUP BY movie_id
+  ) AS sub
+);
+
 
 --- Director with the most movies in the dataset
 

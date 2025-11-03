@@ -51,10 +51,10 @@ def _read_processed(processed_dir: Path):
 
 def load(processed_dir: Path):
     print("Starting load step...")
-    db_url = get_database_url()
+    db_url = get_database_url() #Establish database connection
     print(f"Using DATABASE_URL={db_url}")
 
-    schema_path = Path(__file__).resolve().parent.parent.parent / "schema.sql"
+    schema_path = Path(__file__).resolve().parent.parent.parent / "schema.sql" #Get schema path
     apply_schema(schema_path)
 
     movies, genres, movie_genres, users, ratings, omdb = _read_processed(processed_dir)

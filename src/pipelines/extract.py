@@ -26,7 +26,7 @@ def _download_zip(zip_path: Path):
                     f.write(chunk)
     print("Download complete.")
 
-def _extract_zip(zip_path: Path, out_dir: Path):
+def _extract_zip(zip_path: Path, out_dir: Path): 
     """Extract the downloaded MovieLens zip file into the raw data folder."""
     with zipfile.ZipFile(zip_path, "r") as z:
         z.extractall(out_dir)
